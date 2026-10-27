@@ -32,6 +32,10 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
     /**
      * Get the attributes that should be cast.
      *
@@ -44,4 +48,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    
 }
