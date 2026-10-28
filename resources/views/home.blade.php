@@ -1,69 +1,117 @@
 @extends('layouts.app')
+
 @section('title', 'Trang chủ')
 
 @section('content')
+<div class="container mb-5">
 
-    <!-- Phần nổi bật: 2 bài nhiều bình luận nhất -->
+    <header class="bg-primary text-white p-3 mb-4 rounded">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <a href="{{ route('posts.index') }}" class="text-white text-decoration-none fw-bold fs-4">
+                CỘNG ĐỒNG SINH VIÊN
+            </a>
+
+            <div class="d-flex align-items-center gap-3">
+                @guest
+                    <a href="{{ route('register') }}" class="text-white text-decoration-none">
+                        Đăng ký
+                    </a>
+                    <a href="{{ route('login') }}" class="text-white text-decoration-none">
+                        Đăng nhập
+                    </a>
+                @endguest
+
+                @auth
+                    <span>Xin chào, {{ auth()->user()->name }}</span>
+
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            Đăng xuất
+                        </button>
+                    </form>
+                @endauth
+            </div>
+        </div>
+    </header>
+
+    <h5 class="mb-3">Bài viết nổi bật</h5>
+
     @if($featured->count())
-    <div class="row g-0 border mb-4">
-        @foreach($featured as $post)
-            <div class="col-md-6 {{ $loop->first ? 'border-end' : '' }}">
-                <div class="featured-box d-flex">
-                    <div class="featured-avatar me-3 bg-primary text-white d-flex align-items-center justify-content-center fw-bold flex-shrink-0">
-                        {{ mb_strtoupper(mb_substr($post->user->name, 0, 1)) }}
-                    </div>
-                    <div>
-                        <h6 class="mb-1">
-                            <a href="{{ route('posts.show', $post) }}" class="{{ $loop->first ? 'text-danger' : 'text-primary' }} text-decoration-none">
-                                {{ \Illuminate\Support\Str::limit($post->title, 60) }}
-                            </a>
-                        </h6>
-                        <div class="text-muted" style="font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
-                            {{ \Illuminate\Support\Str::limit($post->content, 80) }}
-                        </div>
-                        <div class="text-muted mt-1" style="font-size: 0.75rem;">
-                            {{ $post->user->name }} &middot; {{ $post->created_at->diffForHumans() }} &middot; Trả lời: {{ $post->comments_count }}
+        <div class="row g-3 mb-4">
+            @foreach($featured as $post)
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6>
+                                <a href="{{ route('posts.show', $post) }}"
+                                   class="text-decoration-none">
+                                    {{ \Illuminate\Support\Str::limit($post->title, 60) }}
+                                </a>
+                            </h6>
+
+                            <p class="text-muted small">
+                                {{ \Illuminate\Support\Str::limit($post->content, 100) }}
+                            </p>
+
+                            <div class="text-muted small">
+                                {{ $post->user->name }}
+                                &middot;
+                                {{ $post->created_at->diffForHumans() }}
+                                &middot;
+                                Trả lời: {{ $post->comments_count }}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
     @endif
 
-    <!-- Danh sách bài viết -->
-    <div class="thread-container">
-        <div class="thread-header d-flex justify-content-between align-items-center">
-            <span>Mới ra lò</span>
-            <form method="GET" action="{{ route('posts.index') }}" class="d-flex" style="gap:6px">
-                <input type="text" name="search" class="form-control form-control-sm" placeholder="Tìm theo tiêu đề...">
-                <button class="btn btn-sm btn-primary" type="submit">Tìm</button>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span class="fw-bold">Mới ra lò</span>
+
+            <form method="GET" action="{{ route('posts.index') }}" class="d-flex gap-2">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control form-control-sm"
+                    placeholder="Tìm theo tiêu đề..."
+                >
+                <button class="btn btn-primary btn-sm" type="submit">
+                    Tìm
+                </button>
             </form>
         </div>
 
-        @forelse($posts as $post)
-            <div class="thread-item">
-                <div class="thread-avatar me-3 bg-secondary text-white d-flex align-items-center justify-content-center flex-shrink-0">
-                    {{ mb_strtoupper(mb_substr($post->user->name, 0, 1)) }}
-                </div>
-                <div class="flex-grow-1">
-                    <div>
-                        <a href="{{ route('posts.show', $post) }}" class="thread-title">{{ $post->title }}</a>
-                    </div>
-                    <div class="thread-meta">
-                        {{ $post->user->name }} &middot; {{ $post->created_at->diffForHumans() }}
-                    </div>
-                </div>
-                <div class="thread-stats px-3">
-                    <div>Trả lời: <span class="fw-bold">{{ $post->comments_count }}</span></div>
-                </div>
-            </div>
-        @empty
-            <div class="thread-item text-muted">Chưa có bài viết nào.</div>
-        @endforelse
+        <div class="card-body p-0">
+            @forelse($posts as $post)
+                <div class="p-3 border-bottom">
+                    <a href="{{ route('posts.show', $post) }}"
+                       class="fw-semibold text-decoration-none">
+                        {{ $post->title }}
+                    </a>
 
-        <div class="p-3 text-center">
+                    <div class="text-muted small mt-1">
+                        {{ $post->user->name }}
+                        &middot;
+                        {{ $post->created_at->diffForHumans() }}
+                        &middot;
+                        Trả lời: {{ $post->comments_count }}
+                    </div>
+                </div>
+            @empty
+                <div class="p-3 text-muted">
+                    Chưa có bài viết nào.
+                </div>
+            @endforelse
+        </div>
+
+        <div class="card-footer text-center">
             <a href="{{ route('posts.index') }}">Xem tất cả bài viết &rarr;</a>
         </div>
     </div>
+
+</div>
 @endsection
