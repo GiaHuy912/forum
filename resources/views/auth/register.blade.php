@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng ký</title>
+<<<<<<< HEAD
+=======
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+>>>>>>> origin/main
 </head>
 <body>
     <h2>Đăng ký</h2>

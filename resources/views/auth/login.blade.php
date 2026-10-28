@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<<<<<<< HEAD
+=======
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+>>>>>>> origin/main
     <meta charset="UTF-8">
     <title>Đăng nhập</title>
 </head>

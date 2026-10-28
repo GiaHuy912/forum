@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome cho các icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<<<<<<< HEAD
     <style>
         body {
             background-color: #f4f5f7;
@@ -139,6 +140,9 @@
             margin-left: 5px;
         }
     </style>
+=======
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+>>>>>>> origin/main
 </head>
 <body>
 
