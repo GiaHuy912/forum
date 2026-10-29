@@ -1,46 +1,120 @@
 @extends('layouts.app')
+
 @section('title', $post->title)
 
 @section('content')
-<article class="bg-white border p-4 mb-4">
-    <h3>{{ $post->title }}</h3>
-    <p class="text-muted small">
-        Đăng bởi <strong>{{ $post->user->name }}</strong>
-        &middot; {{ $post->created_at->format('d/m/Y H:i') }}
-        @if($post->updated_at->gt($post->created_at))
-            &middot; (đã sửa {{ $post->updated_at->diffForHumans() }})
-        @endif
-    </p>
-    <hr>
-    <div style="white-space: pre-line">{{ $post->content }}</div>
+    <div style="margin-bottom: 16px;">
+        <a href="{{ route('posts.index') }}" class="btn btn-outline">← Quay lại danh sách bài viết</a>
+    </div>
 
-    @auth
-        @if(auth()->id() === $post->user_id || auth()->user()->isAdmin())
-            <hr>
-            <div class="d-flex gap-2">
-                <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-warning">Sửa</a>
-                <form method="POST" action="{{ route('posts.destroy', $post) }}"
-                      onsubmit="return confirm('Bạn chắc chắn muốn xóa bài viết này?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                </form>
+    <article class="card">
+        <div class="post-detail-header">
+            <div class="post-meta">
+                <span>Tác giả: <strong>{{ $post->user->name ?? 'Ẩn danh' }}</strong></span>
+                <span>•</span>
+                <span>Chuyên mục: <strong>{{ $post->category->name ?? 'Chưa phân loại' }}</strong></span>
+                <span>•</span>
+                <span>Đăng lúc {{ $post->created_at?->format('d/m/Y H:i') }}</span>
+                @if ($post->updated_at && $post->updated_at->ne($post->created_at))
+                    <span>•</span>
+                    <span>Cập nhật {{ $post->updated_at->format('d/m/Y H:i') }}</span>
+                @endif
+            </div>
+
+            <h1 class="page-title" style="margin-top: 10px;">{{ $post->title }}</h1>
+        </div>
+
+        <div class="post-detail-content">{{ $post->content }}</div>
+
+        @auth
+            @can('update', $post)
+                <div class="post-actions" style="margin-top: 22px;">
+                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline">Sửa bài viết</a>
+
+                    @can('delete', $post)
+                        <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Xóa bài viết</button>
+                        </form>
+                    @endcan
+                </div>
+            @endcan
+        @endauth
+    </article>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="section-title">Bình luận ({{ $post->comments->count() }})</h2>
+                <p class="section-subtitle">Trao đổi lịch sự, rõ ràng và đúng tinh thần giữ bình tĩnh.</p>
+            </div>
+        </div>
+
+        {{-- Form đăng bình luận (chỉ hiện khi đã đăng nhập) --}}
+        @auth
+            <form action="{{ route('comments.store', $post) }}" method="POST" style="margin-bottom: 24px;">
+                @csrf
+                <div class="form-group">
+                    <label for="content" class="form-label">Viết bình luận của bạn</label>
+                    <textarea
+                        id="content"
+                        name="content"
+                        rows="3"
+                        class="form-control @error('content') is-invalid @enderror"
+                        placeholder="Chia sẻ góc nhìn của bạn một cách bình tĩnh..."
+                    >{{ old('content') }}</textarea>
+                    @error('content')
+                        <span class="error-text">{{ $message }}</span>
+                    @enderror
+                </div>
+                <button type="submit" class="btn btn-primary">Đăng bình luận</button>
+            </form>
+        @else
+            <div class="empty-state" style="margin-bottom: 20px; padding: 16px;">
+                Vui lòng <a href="{{ route('login') }}" style="color: var(--primary); font-weight: 600;">đăng nhập</a> để tham gia bình luận.
+            </div>
+        @endauth
+
+        {{-- Danh sách bình luận --}}
+        @if ($post->comments->isEmpty())
+            <div class="empty-state">
+                Chưa có bình luận nào cho bài viết này.
+            </div>
+        @else
+            <div class="comment-list">
+                @foreach ($post->comments as $comment)
+                    <div class="comment-item">
+                        <div class="comment-meta">
+                            <strong>{{ $comment->user->name ?? 'Ẩn danh' }}</strong>
+                            <span>•</span>
+                            <span>{{ $comment->created_at?->format('d/m/Y H:i') }}</span>
+                            @if ($comment->updated_at && $comment->updated_at->ne($comment->created_at))
+                                <span>•</span>
+                                <span>Đã chỉnh sửa</span>
+                            @endif
+                        </div>
+
+                        <div class="comment-content">{{ $comment->content }}</div>
+
+                        @auth
+                            @can('update', $comment)
+                                <div class="comment-actions">
+                                    <a href="{{ route('comments.edit', $comment) }}" class="btn btn-outline" style="padding: 5px 12px; font-size: 0.84rem;">Sửa</a>
+
+                                    @can('delete', $comment)
+                                        <form action="{{ route('comments.destroy', $comment) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" style="padding: 5px 12px; font-size: 0.84rem;">Xóa</button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            @endcan
+                        @endauth
+                    </div>
+                @endforeach
             </div>
         @endif
-    @endauth
-</article>
-
-<h5>Bình luận ({{ $post->comments->count() }})</h5>
-{{-- Người làm Bình luận: thay đoạn dưới bằng form + nút sửa/xóa comment --}}
-@forelse($post->comments as $comment)
-    <div class="bg-white border p-3 mb-2">
-        <strong>{{ $comment->user->name }}</strong>
-        <small class="text-muted">&middot; {{ $comment->created_at->diffForHumans() }}</small>
-        <div style="white-space: pre-line">{{ $comment->content }}</div>
-    </div>
-@empty
-    <p class="text-muted">Chưa có bình luận nào.</p>
-@endforelse
-
-<a href="{{ route('posts.index') }}" class="btn btn-link mt-2">&larr; Quay lại danh sách</a>
+    </section>
 @endsection
