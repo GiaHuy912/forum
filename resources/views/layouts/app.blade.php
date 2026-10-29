@@ -200,7 +200,6 @@
 
     <!-- Nội dung chính -->
     <main class="container mb-5">
-        <p class="text-muted mb-3">&copy; XAMVN.COM</p>
 
         <!-- Thông báo flash -->
         @foreach(['success' => 'success', 'error' => 'danger', 'status' => 'info'] as $key => $type)

@@ -3,6 +3,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AdminPostController;
+use App\Http\Controllers\AdminUserController;
 
 Route::redirect('/', '/posts');
 
@@ -12,7 +14,23 @@ Route::resource('posts', PostController::class)
 
 Route::resource('posts', PostController::class)
     ->only(['index', 'show']);
+    
+Route::get('/admin/posts', [AdminPostController::class, 'index'])
+    ->middleware('admin')
+    ->name('admin.posts.index');
+
+Route::delete('/admin/posts/{post}', [AdminPostController::class, 'destroy'])
+    ->middleware('admin')
+    ->name('admin.posts.destroy');
+
+
+Route::get('/admin/users', [AdminUserController::class, 'index'])
+    ->middleware('admin')
+    ->name('admin.users.index');
+
+Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])
+    ->middleware('admin')
+    ->name('admin.users.destroy');
 
 require __DIR__.'/auth.php';
 
-Route::get('/test-auth', fn () => 'Đã đăng nhập, vào được')->middleware('auth');
