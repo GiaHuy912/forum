@@ -42,7 +42,7 @@
             @endforelse
         </tbody>
     </table>
-    <a href="http://127.0.0.1:8000/admin/posts">Chuyển sang trang quản lý bài viết</a>
+    <a href="/admin/posts">Chuyển sang trang quản lý bài viết</a>
 
     {{ $users->links() }}
 @endsection

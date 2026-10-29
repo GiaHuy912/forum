@@ -190,7 +190,9 @@
             </div>
         </div>
     </header>
-
+@if (auth()->user()?->isAdmin())
+                    <a href="/admin/posts">Quản trị</a>
+                @endif
     <!-- Sub Navigation -->
     <div class="sub-nav mb-3">
         <div class="container">
