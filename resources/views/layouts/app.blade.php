@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'XAMVN - Bố cục Diễn đàn')</title>
+    <title>@yield('title', 'Diễn đàn sinh viên')</title>
     <!-- Tích hợp Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome cho các icon -->
@@ -184,10 +184,44 @@
                 </div>
             </div>
         </div>
+        @if (auth()->user()?->isAdmin())
+    <div class="dropdown d-inline-block me-3">
+        <a class="dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown"
+           style="background: linear-gradient(135deg, #dc3545, #ff6b6b);
+                  color: #fff;
+                  font-size: 0.85rem;
+                  font-weight: 700;
+                  border-radius: 999px;
+                  padding: 4px 14px;
+                  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.45);">
+            <i class="fa-solid fa-shield-halved"></i> Quản trị
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end"
+            style="border: 2px solid #dc3545;
+                   border-radius: 12px;
+                   padding: 6px;
+                   box-shadow: 0 8px 24px rgba(220, 53, 69, 0.25);">
+            <li>
+                <a class="dropdown-item" href="{{ url('/admin/posts') }}"
+                   style="font-weight: 600; color: #b02a37; border-radius: 8px;"
+                   onmouseover="this.style.background='#dc3545'; this.style.color='#fff';"
+                   onmouseout="this.style.background=''; this.style.color='#b02a37';">
+                    <i class="fa-solid fa-file-lines"></i> Quản lý bài viết
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{{ url('/admin/users') }}"
+                   style="font-weight: 600; color: #b02a37; border-radius: 8px;"
+                   onmouseover="this.style.background='#dc3545'; this.style.color='#fff';"
+                   onmouseout="this.style.background=''; this.style.color='#b02a37';">
+                    <i class="fa-solid fa-users"></i> Quản lý người dùng
+                </a>
+            </li>
+        </ul>
+    </div>
+@endif
     </header>
-@if (auth()->user()?->isAdmin())
-                    <a href="/admin/posts">Quản trị</a>
-                @endif
     <!-- Sub Navigation -->
     <div class="sub-nav mb-3">
         <div class="container">
