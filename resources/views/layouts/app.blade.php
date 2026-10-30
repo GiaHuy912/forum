@@ -153,15 +153,13 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('posts.index') }}">Trang chủ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa-solid fa-newspaper"></i> Lều báo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa-solid fa-beer-mug-empty"></i> Quán con sò say</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fa-solid fa-pen-nib"></i> Trại sáng tác</a>
-                        </li>
+                        @foreach (\App\Models\Category::orderBy('id')->get() as $category)
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fa-solid fa-newspaper"></i> {{ $category->name }}
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="pb-2">
