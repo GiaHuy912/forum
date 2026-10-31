@@ -15,9 +15,12 @@ class PostController extends Controller
         'content.required' => 'Vui lòng nhập nội dung bài viết.',
         'content.min'      => 'Nội dung bài viết phải có ít nhất 10 ký tự.',
         'content.max'      => 'Nội dung không được vượt quá 10000 ký tự.',
+        'category_id.required' => 'Vui lòng chọn chuyên mục.',
+        'category_id.exists'   => 'Chuyên mục không hợp lệ.',
     ];
 
     private const RULES = [
+        'category_id' => 'required|exists:categories,id',
         'title'   => 'required|string|max:255',
         'content' => 'required|string|min:10|max:10000',
     ];

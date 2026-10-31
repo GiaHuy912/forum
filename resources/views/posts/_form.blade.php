@@ -14,3 +14,18 @@
 </div>
 <button type="submit" class="btn btn-primary">{{ $submit }}</button>
 <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary">Hủy</a>
+
+<div class="mb-3">
+    <label for="category_id" class="form-label">Chuyên mục</label>
+    <select id="category_id" name="category_id"
+            class="form-select @error('category_id') is-invalid @enderror">
+        <option value="">-- Chọn chuyên mục --</option>
+        @foreach (\App\Models\Category::orderBy('id')->get() as $category)
+            <option value="{{ $category->id }}"
+                @selected(old('category_id', $post->category_id ?? request('category')) == $category->id)>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('category_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+</div>
