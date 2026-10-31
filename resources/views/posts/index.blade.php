@@ -15,6 +15,9 @@
     @if($search !== '')
         <a href="{{ route('posts.index') }}" class="btn btn-outline-secondary">Xóa lọc</a>
     @endif
+    @if(request('category'))
+        <input type="hidden" name="category" value="{{ request('category') }}">
+    @endif
 </form>
 
 @if($search !== '')

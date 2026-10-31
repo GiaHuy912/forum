@@ -29,6 +29,7 @@ class PostController extends Controller
         $posts = Post::with('user')
             ->withCount('comments')
             ->when($search !== '', fn ($q) => $q->where('title', 'like', "%{$search}%"))
+             ->when($request->category, fn ($q, $c) => $q->where('category_id', $c))
             ->latest()
             ->paginate(10)
             ->withQueryString();

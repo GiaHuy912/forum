@@ -151,16 +151,17 @@
                     <a href="{{ route('posts.index') }}" class="logo-text mb-2 me-4">CỘNG ĐỒNG SINH VIÊN&trade;</a>
                     <ul class="nav main-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('posts.index') }}">Trang chủ</a>
+                            <a class="nav-link {{ request()->routeIs('posts.index') && !request('category') ? 'active' : '' }}"
+                            href="{{ route('posts.index') }}">Trang chủ</a>
                         </li>
                         @foreach (\App\Models\Category::orderBy('id')->get() as $category)
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link {{ request('category') == $category->id ? 'active' : '' }}"
+                                href="{{ route('posts.index', ['category' => $category->id]) }}">
                                     <i class="fa-solid fa-newspaper"></i> {{ $category->name }}
                                 </a>
                             </li>
                         @endforeach
-                    </ul>
                 </div>
                 <div class="pb-2">
                     @auth
