@@ -61,14 +61,14 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        $this->authorizePost('update', $post);
+        Gate::authorize('update', $post);
 
         return view('posts.edit', compact('post'));
     }
 
     public function update(Request $request, Post $post)
     {
-        $this->authorizePost('update', $post);
+        Gate::authorize('update', $post);
 
         $post->update($request->validate(self::RULES, self::MESSAGES));
 
@@ -78,7 +78,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $this->authorizePost('delete', $post);
+         Gate::authorize('delete', $post);
 
         $post->delete();
 
