@@ -23,17 +23,28 @@ class AuthController extends Controller
         // validate: nếu sai, Laravel tự quay lại form kèm lỗi ($errors)
         // và giữ lại giá trị cũ (old()). Chỉ khi đúng mới chạy tiếp.
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users,email'], // chưa tồn tại trong bảng users
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'], // chưa tồn tại trong bảng users
             'password' => ['required', 'string', 'min:8', 'confirmed'],           // confirmed: cần ô password_confirmation
+        ], [
+            // Mảng thứ 2: thông báo tiếng Việt, dạng 'ô.rule' => 'nội dung'
+            'name.required' => 'Vui lòng nhập tên hiển thị.',
+            'name.max' => 'Tên hiển thị tối đa 255 ký tự.',
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Email không đúng định dạng.',
+            'email.max' => 'Email tối đa 255 ký tự.',
+            'email.unique' => 'Email này đã được đăng ký.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Mật khẩu nhập lại không khớp.',
         ]);
 
         // Tạo user. Chỉ lấy đúng 3 trường đã validate, KHÔNG lấy role từ form,
         // nên người dùng không thể tự gửi role=admin. Cột role tự mặc định 'user'.
         // Hash::make: băm mật khẩu một chiều, không bao giờ lưu mật khẩu thô.
         $user = User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
@@ -59,8 +70,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'email.email' => 'Email không đúng định dạng.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
 
         // Auth::attempt: tìm user theo email, so mật khẩu với hash trong DB.
