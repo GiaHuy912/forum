@@ -1,43 +1,55 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Đăng ký</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <h2>Đăng ký</h2>
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('register.store') }}">
-        @csrf
+@section('title', 'Đăng ký tài khoản')
 
-        <div>
-            <label for="name">Họ tên</label><br>
-            <input type="text" id="name" name="name" value="{{ old('name') }}">
-            @error('name') <div style="color:red">{{ $message }}</div> @enderror
+@section('content')
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-4 text-center fw-bold">Đăng ký tài khoản</h1>
+
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2">
+                        <ul class="mb-0 ps-3">
+                            @foreach ($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ url('/register') }}">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Tên hiển thị</label>
+                        <input type="text" name="name" value="{{ old('name') }}" class="form-control" required autofocus>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ old('email') }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nhập lại mật khẩu</label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <span class="text-muted">Đã có tài khoản?</span>
+                    <a href="{{ route('login') }}" class="text-decoration-none">Đăng nhập</a>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label for="email">Email</label><br>
-            <input type="email" id="email" name="email" value="{{ old('email') }}">
-            @error('email') <div style="color:red">{{ $message }}</div> @enderror
-        </div>
-
-        <div>
-            <label for="password">Mật khẩu (tối thiểu 8 ký tự)</label><br>
-            <input type="password" id="password" name="password">
-            @error('password') <div style="color:red">{{ $message }}</div> @enderror
-        </div>
-
-        <div>
-            {{-- Tên BẮT BUỘC là password_confirmation để rule 'confirmed' hoạt động --}}
-            <label for="password_confirmation">Nhập lại mật khẩu</label><br>
-            <input type="password" id="password_confirmation" name="password_confirmation">
-        </div>
-
-        <button type="submit">Đăng ký</button>
-    </form>
-
-    <p>Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập</a></p>
-</body>
-</html>
+    </div>
+</div>
+@endsection

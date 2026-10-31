@@ -225,7 +225,11 @@
     <!-- Sub Navigation -->
     <div class="sub-nav mb-3">
         <div class="container">
-            <a href="{{ route('posts.create') }}">Bài viết mới</a>
+            @auth
+                <a href="{{ route('posts.create') }}">Bài viết mới</a>
+            @else
+                <a href="{{ route('login') }}">Đăng nhập để đăng bài</a>
+            @endauth
         </div>
     </div>
 

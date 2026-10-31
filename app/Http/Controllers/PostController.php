@@ -53,7 +53,7 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-        $post->load(['user', 'comments.user']);
+        $post->load(['user', 'category', 'comments.user']);
 
         return view('posts.show', compact('post'));
     }
@@ -83,23 +83,5 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')
             ->with('success', 'Đã xóa bài viết thành công!');
-    }
-
-    /**
-     * Có PostPolicy (Sơn làm) thì dùng Gate::authorize, chưa có thì tạm so sánh user_id / admin.
-     * Lưu ý: Gate::has() chỉ nhận ability đăng ký bằng Gate::define, KHÔNG nhận Policy,
-     * nên dùng Gate::getPolicyFor() để kiểm tra.
-     */
-    private function authorizePost(string $ability, Post $post): void
-    {
-        if (Gate::getPolicyFor($post)) {
-            Gate::authorize($ability, $post);
-            return;
-        }
-
-        $user = Auth::user();
-        if (! $user || ($user->id !== $post->user_id && ! $user->isAdmin())) {
-            abort(403, 'Bạn không có quyền thực hiện thao tác này.');
-        }
     }
 }
