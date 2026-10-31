@@ -157,7 +157,7 @@
                         @foreach (\App\Models\Category::orderBy('id')->get() as $category)
                             <li class="nav-item">
                                 <a class="nav-link {{ request('category') == $category->id ? 'active' : '' }}"
-                                href="{{ route('posts.index', ['category' => $category->id]) }}">
+                                href="#">
                                     <i class="fa-solid fa-newspaper"></i> {{ $category->name }}
                                 </a>
                             </li>

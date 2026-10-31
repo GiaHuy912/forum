@@ -32,7 +32,7 @@ class PostPolicy
             return true;
         }
 
-        // Bước 2: chủ bài thì cho qua (ép int cả hai bên để tránh lệch kiểu)
+        // Bước 2: chủ bài thì cho qua 
         if ((int) $user->id === (int) $post->user_id) {
             return true;
         }
@@ -41,7 +41,7 @@ class PostPolicy
         return false;
     }
 
-    // Xóa: cùng điều kiện với sửa
+    // Xóa:
     public function delete(User $user, Post $post): bool
     {
         if ($user->isAdmin()) {
