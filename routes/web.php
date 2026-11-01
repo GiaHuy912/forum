@@ -8,10 +8,6 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\CommentController;
 use App\Models\Post;
 
-Route::get('/test', function(){
-    return view('home');
-});
-
 Route::redirect('/', '/posts');
 
 Route::resource('posts', PostController::class)
